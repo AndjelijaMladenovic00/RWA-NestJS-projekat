@@ -25,7 +25,7 @@ export class AuthService {
     };
     return {
       access_token: this.jwtService.sign(payload, {
-        secret: 'FicSezUSCq8jEnLeJQqV7UvRw87qum41sPqaHKzjQZE',
+        secret: process.env.SECRET,
       }),
     };
   }
