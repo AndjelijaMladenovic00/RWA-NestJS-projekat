@@ -1,19 +1,38 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { createUserDTO } from 'src/dtos/createUser.dto';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private authService: AuthService,
+  ) {}
 
-  @Get(':email')
-  public getUser(@Param() email: string) {
-    return this.userService.getUser(email);
+  @Get('all')
+  public async getUsers() {
+    return await this.userService.getAll();
   }
 
-  @Post()
+  @Post('signup')
   public createUser(@Body() user: createUserDTO): Promise<User> {
     return this.userService.createUser(user);
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  public login(@Request() req) {
+    return this.authService.login(req.user);
   }
 }

@@ -8,6 +8,7 @@ import { ReviewModule } from './modules/review/review.module';
 import { ArticleModule } from './modules/article/article.module';
 import { ReportModule } from './modules/report/report.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { NotificationModule } from './modules/notification/notification.module';
     ArticleModule,
     ReportModule,
     NotificationModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
