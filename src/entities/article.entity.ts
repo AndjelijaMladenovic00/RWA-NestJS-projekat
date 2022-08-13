@@ -35,6 +35,9 @@ export class Article {
   @Column({ type: 'text', nullable: false })
   public text!: string;
 
+  @Column({ type: 'text', nullable: false })
+  public title!: string;
+
   @OneToMany(() => Review, (review) => review.article)
   public reviews: Review[];
 
