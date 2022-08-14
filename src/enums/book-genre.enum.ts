@@ -2,6 +2,6 @@ export enum BookGenre {
   horror = 'horror',
   romance = 'romance',
   fantasy = 'fantasy',
-  triller = 'triller',
+  triller = 'thriller',
   historical = 'historical',
 }

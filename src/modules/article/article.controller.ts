@@ -1,4 +1,21 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { createArticleDTO } from 'src/dtos/createArticle.dto';
+import { Article } from 'src/entities/article.entity';
+import { ArticleService } from './article.service';
 
 @Controller('articles')
-export class ArticleController {}
+export class ArticleController {
+  constructor(private articleService: ArticleService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Post('createArticle')
+  public createArticle(@Body() article: createArticleDTO): Promise<Article> {
+    return this.articleService.createArticle(article);
+  }
+
+  @Get('all')
+  public getAll() {
+    return this.articleService.getAll();
+  }
+}

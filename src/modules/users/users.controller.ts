@@ -20,7 +20,6 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('all')
   public async getUsers() {
     return await this.userService.getAll();
