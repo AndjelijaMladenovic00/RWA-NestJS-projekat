@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { createArticleDTO } from 'src/dtos/createArticle.dto';
 import { Article } from 'src/entities/article.entity';
@@ -17,5 +25,11 @@ export class ArticleController {
   @Get('all')
   public getAll() {
     return this.articleService.getAll();
+  }
+
+  //@UseGuards(JwtAuthGuard)
+  @Get('getArticlesForId/:id')
+  public getArticlesForId(@Param('id', ParseIntPipe) id: number) {
+    return this.articleService.getArticlesForId(id);
   }
 }
