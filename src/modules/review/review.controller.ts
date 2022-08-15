@@ -1,4 +1,34 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { createReviewDTO } from 'src/dtos/createReview.dto';
+import { ReviewService } from './review.service';
 
 @Controller('reviews')
-export class ReviewController {}
+export class ReviewController {
+  constructor(private reviewService: ReviewService) {}
+
+  @Get('all')
+  public getAll() {
+    return this.reviewService.getAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('createReview')
+  public createReview(@Body() reviewData: createReviewDTO) {
+    return this.reviewService.createReview(reviewData);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('getReviewsForArticle/:id')
+  public getReviewsForArticle(@Param('id', ParseIntPipe) id: number) {
+    return this.reviewService.getReviewsForArticle(id);
+  }
+}

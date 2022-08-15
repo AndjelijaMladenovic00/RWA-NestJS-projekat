@@ -32,4 +32,5 @@ export class ArticleController {
   public getArticlesForId(@Param('id', ParseIntPipe) id: number) {
     return this.articleService.getArticlesForId(id);
   }
+
 }
