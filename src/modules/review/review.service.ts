@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import e from 'express';
 import { createReviewDTO } from 'src/dtos/createReview.dto';
 import { Article } from 'src/entities/article.entity';
 import { Review } from 'src/entities/review.entity';
@@ -20,8 +19,15 @@ export class ReviewService {
   }
 
   public async getReviewsForArticle(id: number) {
-    const article = await this.articleRepository.findOneBy({ id: id });
-    return this.reviewRepository.findBy({ article: article });
+    const article = await this.articleRepository.findOne({
+      where: { id: id },
+      relations: { reviews: true, user: true },
+    });
+    const result = {
+      reviews: article.reviews,
+      username: article.user.username,
+    };
+    return result;
   }
 
   public async createReview(reviewData: createReviewDTO) {
@@ -53,6 +59,6 @@ export class ReviewService {
     };
 
     const newReview = this.reviewRepository.create(review);
-    return this.reviewRepository.save(newReview);
+    return await this.reviewRepository.save(newReview);
   }
 }

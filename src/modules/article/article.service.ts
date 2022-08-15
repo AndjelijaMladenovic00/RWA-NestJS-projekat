@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createArticleDTO } from 'src/dtos/createArticle.dto';
+import { UpdateArticleDTO } from 'src/dtos/updateArticle.dto';
 import { Article } from 'src/entities/article.entity';
 //import { Report } from 'src/entities/report.entity';
 import { Review } from 'src/entities/review.entity';
@@ -48,8 +49,18 @@ export class ArticleService {
     //const reports = await this.reportRepository.findBy({ article: article });
 
     //this.reportRepository.remove(reports);
-    this.reviewRepository.remove(reviews);
+    await this.reviewRepository.remove(reviews);
 
     return this.articleRepository.remove(article);
+  }
+
+  public async updateArticle(data: UpdateArticleDTO) {
+    const article = await this.articleRepository.findOneBy({ id: data.id });
+    article.title = data.title;
+    article.text = data.text;
+    article.genre = data.genre;
+    article.lastEdited = new Date();
+
+    return this.articleRepository.save(article);
   }
 }
