@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -27,10 +28,17 @@ export class ArticleController {
     return this.articleService.getAll();
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('getArticlesForId/:id')
   public getArticlesForId(@Param('id', ParseIntPipe) id: number) {
     return this.articleService.getArticlesForId(id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Delete('deleteArticle/:id')
+  public deleteArticle(@Param('id', ParseIntPipe) id: number) {
+    this.articleService.deleteArticle(id).then(() => {
+      return true;
+    });
+  }
 }
