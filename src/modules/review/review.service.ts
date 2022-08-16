@@ -56,6 +56,7 @@ export class ReviewService {
       comment: reviewData.comment,
       score: reviewData.score,
       user: user,
+      reviewedOn: new Date(),
     };
 
     const newReview = this.reviewRepository.create(review);

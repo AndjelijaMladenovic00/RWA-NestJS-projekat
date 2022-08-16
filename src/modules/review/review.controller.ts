@@ -28,6 +28,7 @@ export class ReviewController {
           articleId: id,
           comment: rev.comment,
           score: rev.score,
+          reviewedOn: rev.reviewedOn,
         };
       });
       return result;
