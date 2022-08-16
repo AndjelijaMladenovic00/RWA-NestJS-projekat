@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmConfig } from 'typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
@@ -9,11 +8,16 @@ import { ArticleModule } from './modules/article/article.module';
 import { ReportModule } from './modules/report/report.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmConfigService } from 'typeOrmConfig.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
+    }),
     UsersModule,
-    TypeOrmModule.forRoot(typeOrmConfig),
     ReviewModule,
     ArticleModule,
     ReportModule,

@@ -5,7 +5,6 @@ import { AuthService } from 'src/auth/auth.service';
 import { Article } from 'src/entities/article.entity';
 import { Report } from 'src/entities/report.entity';
 import { User } from 'src/entities/user.entity';
-import { ArticleService } from '../article/article.service';
 import { UsersService } from '../users/users.service';
 import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
@@ -17,12 +16,7 @@ import { ReportService } from './report.service';
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [ReportController],
-  providers: [
-    ReportService,
-    AuthService,
-    JwtService,
-    ArticleService,
-    UsersService,
-  ],
+  providers: [ReportService, JwtService, AuthService, UsersService],
+  exports: [ReportService],
 })
 export class ReportModule {}
