@@ -26,6 +26,12 @@ export class ArticleController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('getArticlesForFeed/:id')
+  public getArticlesForFeed(@Param('id', ParseIntPipe) id: number) {
+    return this.articleService.getArticlesForFeed(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete('deleteArticle/:id')
   public deleteArticle(@Param('id', ParseIntPipe) id: number) {
     this.articleService.deleteArticle(id);
@@ -37,10 +43,10 @@ export class ArticleController {
     return this.articleService.createArticle(article);
   }
 
-  @Get('all')
+  /*@Get('all')
   public getAll() {
     return this.articleService.getAll();
-  }
+  }*/
 
   @UseGuards(JwtAuthGuard)
   @Put('updateArticle')

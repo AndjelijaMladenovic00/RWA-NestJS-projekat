@@ -65,4 +65,36 @@ export class ArticleService {
     await this.articleRepository.update(data.id, article);
     return article;
   }
+
+  public async getArticlesForFeed(id: number) {
+    let articles: Article[] = await this.articleRepository.find({
+      relations: { user: true },
+    });
+    articles = articles.filter((article: Article) => {
+      const days: number =
+        (new Date().getTime() - article.publishedOn.getTime()) /
+        (1000 * 60 * 60 * 24);
+      if (article.user.id != id && days < 10) return true;
+      else return false;
+    });
+    articles = articles.sort((a: Article, b: Article) => {
+      if (a.publishedOn > b.publishedOn) return -1;
+      else if (a.publishedOn < b.publishedOn) return 1;
+      else return 0;
+    });
+    const articlesData = articles.map((article: Article) => {
+      return {
+        id: article.id,
+        userId: article.user.id,
+        username: article.user.username,
+        publishedOn: article.publishedOn,
+        lastEdited: article.lastEdited,
+        text: article.text,
+        title: article.title,
+        averageScore: article.averageScore,
+        genre: article.genre,
+      };
+    });
+    return articlesData;
+  }
 }
