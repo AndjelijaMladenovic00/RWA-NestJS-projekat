@@ -60,7 +60,9 @@ export class ArticleService {
     article.text = data.text;
     article.genre = data.genre;
     article.lastEdited = new Date();
+    article.id = data.id;
 
-    return this.articleRepository.save(article);
+    await this.articleRepository.update(data.id, article);
+    return article;
   }
 }

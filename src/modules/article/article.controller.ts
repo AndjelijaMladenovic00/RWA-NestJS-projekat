@@ -45,6 +45,6 @@ export class ArticleController {
   @UseGuards(JwtAuthGuard)
   @Put('updateArticle')
   public updateArticle(@Body() data: UpdateArticleDTO) {
-    this.articleService.updateArticle(data);
+    return this.articleService.updateArticle(data);
   }
 }

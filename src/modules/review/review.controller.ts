@@ -25,16 +25,18 @@ export class ReviewController {
   @Get('getReviewsForArticle/:id')
   public async getReviewsForArticle(@Param('id', ParseIntPipe) id: number) {
     const data = await this.reviewService.getReviewsForArticle(id);
-    const result = data.reviews.map((rev) => {
-      return {
-        username: data.username,
-        id: rev.id,
-        articleId: id,
-        comment: rev.comment,
-        score: rev.score,
-      };
-    });
-    return result;
+    if (data.reviews) {
+      const result = data.reviews.map((rev) => {
+        return {
+          username: data.username,
+          id: rev.id,
+          articleId: id,
+          comment: rev.comment,
+          score: rev.score,
+        };
+      });
+      return result;
+    } else return null;
   }
 
   @UseGuards(JwtAuthGuard)
