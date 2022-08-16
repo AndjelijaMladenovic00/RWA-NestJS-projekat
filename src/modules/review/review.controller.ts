@@ -16,11 +16,6 @@ import { ReviewService } from './review.service';
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
-  @Get('all')
-  public getAll() {
-    return this.reviewService.getAll();
-  }
-
   @UseGuards(JwtAuthGuard)
   @Get('getReviewsForArticle/:id')
   public async getReviewsForArticle(@Param('id', ParseIntPipe) id: number) {
@@ -36,7 +31,12 @@ export class ReviewController {
         };
       });
       return result;
-    } else return null;
+    } else return [];
+  }
+
+  @Get('all')
+  public getAll() {
+    return this.reviewService.getAll();
   }
 
   @UseGuards(JwtAuthGuard)
