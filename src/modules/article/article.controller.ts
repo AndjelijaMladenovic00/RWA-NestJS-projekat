@@ -44,10 +44,10 @@ export class ArticleController {
     return this.articleService.createArticle(article);
   }
 
-  @Get('all')
+  /*@Get('all')
   public getAll() {
     return this.articleService.getAll();
-  }
+  }*/
 
   @UseGuards(JwtAuthGuard)
   @Put('updateArticle')

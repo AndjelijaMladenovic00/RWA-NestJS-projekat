@@ -101,7 +101,6 @@ export class ArticleService {
   }
 
   public async updateArticleScore(data: UpdateArticleScoreDTO) {
-    const article = await this.articleRepository.findOneBy({ id: data.id });
     await this.articleRepository.update(data.id, { averageScore: data.score });
   }
 }

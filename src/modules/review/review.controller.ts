@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { createReviewDTO } from 'src/dtos/createReview.dto';
-import { Review } from 'src/entities/review.entity';
 import { ReviewService } from './review.service';
 
 @Controller('reviews')
@@ -23,10 +22,10 @@ export class ReviewController {
     return data;
   }
 
-  @Get('all')
+  /* @Get('all')
   public getAll() {
     return this.reviewService.getAll();
-  }
+  }*/
 
   @UseGuards(JwtAuthGuard)
   @Post('createReview')
