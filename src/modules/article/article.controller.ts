@@ -12,6 +12,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { createArticleDTO } from 'src/dtos/createArticle.dto';
 import { UpdateArticleDTO } from 'src/dtos/updateArticle.dto';
+import { UpdateArticleScoreDTO } from 'src/dtos/uptateArticleScore.dto';
 import { Article } from 'src/entities/article.entity';
 import { ArticleService } from './article.service';
 
@@ -52,5 +53,11 @@ export class ArticleController {
   @Put('updateArticle')
   public updateArticle(@Body() data: UpdateArticleDTO) {
     return this.articleService.updateArticle(data);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('updateArticleScore')
+  public updateArticleScore(@Body() data: UpdateArticleScoreDTO) {
+    return this.articleService.updateArticleScore(data);
   }
 }

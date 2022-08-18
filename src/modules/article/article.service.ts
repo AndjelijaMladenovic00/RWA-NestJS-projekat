@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createArticleDTO } from 'src/dtos/createArticle.dto';
 import { UpdateArticleDTO } from 'src/dtos/updateArticle.dto';
+import { UpdateArticleScoreDTO } from 'src/dtos/uptateArticleScore.dto';
 import { Article } from 'src/entities/article.entity';
 import { Report } from 'src/entities/report.entity';
 import { Review } from 'src/entities/review.entity';
@@ -97,5 +98,10 @@ export class ArticleService {
       };
     });
     return articlesData;
+  }
+
+  public async updateArticleScore(data: UpdateArticleScoreDTO) {
+    const article = await this.articleRepository.findOneBy({ id: data.id });
+    await this.articleRepository.update(data.id, { averageScore: data.score });
   }
 }
