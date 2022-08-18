@@ -19,15 +19,30 @@ export class ReviewService {
   }
 
   public async getReviewsForArticle(id: number) {
-    const article = await this.articleRepository.findOne({
+    const article: Article = await this.articleRepository.findOne({
       where: { id: id },
-      relations: { reviews: true, user: true },
+      relations: { reviews: true },
     });
-    const result = {
-      reviews: article.reviews,
-      username: article.user.username,
-    };
-    return result;
+    if (!article || !article.reviews || article.reviews.length == 0) return [];
+    let reviews = [];
+    for (let i = 0; i < article.reviews.length; i++) {
+      const review = await this.reviewRepository.findOne({
+        where: { id: article.reviews[i].id },
+        relations: { user: true },
+      });
+      const data = {
+        id: review.id,
+        score: review.score,
+        comment: review.comment,
+        username: review.user.username,
+        reviewedOn: review.reviewedOn,
+      };
+      reviews.push(data);
+    }
+
+    return reviews;
+
+    return reviews;
   }
 
   public async createReview(reviewData: createReviewDTO) {
