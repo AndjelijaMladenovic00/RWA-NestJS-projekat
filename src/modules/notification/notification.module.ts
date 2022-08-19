@@ -7,11 +7,13 @@ import { User } from 'src/entities/user.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { Article } from 'src/entities/article.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Notification]),
+    TypeOrmModule.forFeature([Article]),
   ],
   controllers: [NotificationController],
   providers: [NotificationService, JwtService, AuthService, UsersService],

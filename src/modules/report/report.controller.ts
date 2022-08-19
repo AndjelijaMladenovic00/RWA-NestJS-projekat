@@ -35,7 +35,7 @@ export class ReportController {
   @Put('updateReport/:id/:status')
   public updateReport(
     @Param('id', ParseIntPipe) id: number,
-    @Param('status', ParseEnumPipe) status: ReportStatus,
+    @Param('status', new ParseEnumPipe(ReportStatus)) status: ReportStatus,
   ) {
     return this.reportService.updateReport(id, status);
   }
