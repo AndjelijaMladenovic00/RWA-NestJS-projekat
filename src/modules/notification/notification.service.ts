@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createNotificationDTO } from 'src/dtos/createNotification.dto';
+import { Article } from 'src/entities/article.entity';
 import { Notification } from 'src/entities/notification.entity';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -11,16 +12,22 @@ export class NotificationService {
     @InjectRepository(Notification)
     private notificationRepository: Repository<Notification>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Article) private articleRepository: Repository<Article>,
   ) {}
 
   public async createNotification(data: createNotificationDTO) {
     const user: User = await this.userRepository.findOneBy({ id: data.userID });
+    const article: Article = await this.articleRepository.findOneBy({
+      id: data.articleID,
+    });
     const notificationData = {
       user: user,
       sentOn: new Date(),
       opened: false,
       title: data.title,
       message: data.message,
+      article: article,
+      deleteArticleOnRecetion: data.deleteArticleOnRecetion,
     };
     const notification = await this.notificationRepository.create(
       notificationData,
@@ -45,7 +52,12 @@ export class NotificationService {
           else if (a.sentOn < b.sentOn) return 1;
           else return 0;
         })
-        .map((notification: Notification) => {
+        .map(async (notification: Notification) => {
+          const notificationWithArticle =
+            await this.notificationRepository.findOne({
+              where: { id: notification.id },
+              relations: { article: true },
+            });
           return {
             id: notification.id,
             userID: userID,
@@ -53,6 +65,8 @@ export class NotificationService {
             message: notification.message,
             sentOn: notification.sentOn,
             opened: notification.opened,
+            articleID: notificationWithArticle.article.id,
+            deleteOnReception: notification.deleteArticleOnReception,
           };
         });
 
@@ -76,7 +90,12 @@ export class NotificationService {
           else if (a.sentOn < b.sentOn) return 1;
           else return 0;
         })
-        .map((notification: Notification) => {
+        .map(async (notification: Notification) => {
+          const notificationWithArticle =
+            await this.notificationRepository.findOne({
+              where: { id: notification.id },
+              relations: { article: true },
+            });
           return {
             id: notification.id,
             userID: userID,
@@ -84,6 +103,8 @@ export class NotificationService {
             message: notification.message,
             sentOn: notification.sentOn,
             opened: notification.opened,
+            articleID: notificationWithArticle.article.id,
+            deleteOnReception: notification.deleteArticleOnReception,
           };
         });
 

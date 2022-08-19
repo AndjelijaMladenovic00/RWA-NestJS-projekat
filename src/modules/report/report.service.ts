@@ -40,7 +40,7 @@ export class ReportService {
       where: {
         status: ReportStatus.pending,
       },
-      relations: { article: true },
+      relations: { article: true, user: true },
     });
 
     const data = reports.map((report: Report) => {
@@ -49,6 +49,7 @@ export class ReportService {
         articleTitle: report.article.title,
         articleText: report.article.text,
         reportedOn: report.reportedOn,
+        username: report.user.username,
       };
     });
 
@@ -85,6 +86,8 @@ export class ReportService {
       userID: article.user.id,
       title: `Article "${article.title}" has been deleted`,
       message: `Your article "${article.title}" has beed removed by the admin, acording to the report of another platform user!`,
+      articleID: article.id,
+      deleteArticleOnRecetion: true,
     };
 
     this.articleRepository.remove(article);

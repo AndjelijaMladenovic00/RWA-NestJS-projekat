@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BookGenre } from '../enums/book-genre.enum';
+import { Notification } from './notification.entity';
 import { Report } from './report.entity';
 import { Review } from './review.entity';
 import { User } from './user.entity';
@@ -49,4 +50,7 @@ export class Article {
 
   @Column({ type: 'text' })
   public genre: BookGenre;
+
+  @OneToMany(() => Notification, (notification) => notification.article)
+  public notifications: Notification[];
 }
