@@ -1,4 +1,10 @@
-import { Column, ColumnTypeUndefinedError, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  ColumnTypeUndefinedError,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Article } from './article.entity';
 import { User } from './user.entity';
 
@@ -29,6 +35,6 @@ export class Notification {
   @ManyToOne(() => Article, (article) => article.notifications)
   public article!: Article;
 
-  @Column({type: 'boolean', nullable: false})
+  @Column({ type: 'boolean', nullable: false })
   public deleteArticleOnReception!: boolean;
 }

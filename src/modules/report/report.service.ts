@@ -87,7 +87,7 @@ export class ReportService {
       title: `Article "${article.title}" has been deleted`,
       message: `Your article "${article.title}" has beed removed by the admin, acording to the report of another platform user!`,
       articleID: article.id,
-      deleteArticleOnRecetion: true,
+      deleteArticleOnReception: true,
     };
 
     this.articleRepository.remove(article);

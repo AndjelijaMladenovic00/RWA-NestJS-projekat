@@ -27,7 +27,7 @@ export class NotificationService {
       title: data.title,
       message: data.message,
       article: article,
-      deleteArticleOnRecetion: data.deleteArticleOnRecetion,
+      deleteArticleOnReception: data.deleteArticleOnReception,
     };
     const notification = await this.notificationRepository.create(
       notificationData,
@@ -43,7 +43,15 @@ export class NotificationService {
     });
     if (!user.notifications || user.notifications.length == 0) return [];
     else {
-      const data = user.notifications
+      const notificationsWithArticles: Notification[] = [];
+      for (let i = 0; i < user.notifications.length; i++) {
+        const notification = await this.notificationRepository.findOne({
+          where: { id: user.notifications[0].id },
+          relations: { article: true },
+        });
+        notificationsWithArticles.push(notification);
+      }
+      const data = notificationsWithArticles
         .filter((notification: Notification) => {
           return !notification.opened;
         })
@@ -52,12 +60,7 @@ export class NotificationService {
           else if (a.sentOn < b.sentOn) return 1;
           else return 0;
         })
-        .map(async (notification: Notification) => {
-          const notificationWithArticle =
-            await this.notificationRepository.findOne({
-              where: { id: notification.id },
-              relations: { article: true },
-            });
+        .map((notification: Notification) => {
           return {
             id: notification.id,
             userID: userID,
@@ -65,8 +68,8 @@ export class NotificationService {
             message: notification.message,
             sentOn: notification.sentOn,
             opened: notification.opened,
-            articleID: notificationWithArticle.article.id,
-            deleteOnReception: notification.deleteArticleOnReception,
+            articleID: notification.article.id,
+            deleteArticleOnReception: notification.deleteArticleOnReception,
           };
         });
 
@@ -81,21 +84,24 @@ export class NotificationService {
     });
     if (!user.notifications || user.notifications.length == 0) return [];
     else {
-      const data = user.notifications
+      const notificationsWithArticles: Notification[] = [];
+      for (let i = 0; i < user.notifications.length; i++) {
+        const notification = await this.notificationRepository.findOne({
+          where: { id: user.notifications[0].id },
+          relations: { article: true },
+        });
+        notificationsWithArticles.push(notification);
+      }
+      const data = notificationsWithArticles
         .filter((notification: Notification) => {
-          return notification.sentOn > after && !notification.opened;
+          return !notification.opened && notification.sentOn > after;
         })
         .sort((a: Notification, b: Notification) => {
           if (a.sentOn > b.sentOn) return -1;
           else if (a.sentOn < b.sentOn) return 1;
           else return 0;
         })
-        .map(async (notification: Notification) => {
-          const notificationWithArticle =
-            await this.notificationRepository.findOne({
-              where: { id: notification.id },
-              relations: { article: true },
-            });
+        .map((notification: Notification) => {
           return {
             id: notification.id,
             userID: userID,
@@ -103,8 +109,8 @@ export class NotificationService {
             message: notification.message,
             sentOn: notification.sentOn,
             opened: notification.opened,
-            articleID: notificationWithArticle.article.id,
-            deleteOnReception: notification.deleteArticleOnReception,
+            articleID: notification.article.id,
+            deleteArticleOnReception: notification.deleteArticleOnReception,
           };
         });
 

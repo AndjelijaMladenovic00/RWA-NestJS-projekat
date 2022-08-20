@@ -3,5 +3,5 @@ export interface createNotificationDTO {
   title: string;
   message: string;
   articleID: number;
-  deleteArticleOnRecetion: boolean;
+  deleteArticleOnReception: boolean;
 }
