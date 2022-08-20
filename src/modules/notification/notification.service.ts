@@ -82,7 +82,8 @@ export class NotificationService {
       where: { id: userID },
       relations: { notifications: true },
     });
-    if (!user.notifications || user.notifications.length == 0) return [];
+    if (!user || !user.notifications || user.notifications.length == 0)
+      return [];
     else {
       const notificationsWithArticles: Notification[] = [];
       for (let i = 0; i < user.notifications.length; i++) {
