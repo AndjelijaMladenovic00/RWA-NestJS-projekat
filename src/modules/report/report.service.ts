@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import e from 'express';
 import { createNotificationDTO } from 'src/dtos/createNotification.dto';
 import { Article } from 'src/entities/article.entity';
 import { Notification } from 'src/entities/notification.entity';
@@ -50,6 +51,7 @@ export class ReportService {
         articleText: report.article.text,
         reportedOn: report.reportedOn,
         username: report.user.username,
+        articleID: report.article.id,
       };
     });
 
@@ -63,36 +65,55 @@ export class ReportService {
     });
 
     if (status == ReportStatus.rejected) {
-      return this.reportRepository.update(report, {
-        status: status,
-        resolvedOn: new Date(),
+      const article = await this.articleRepository.findOne({
+        where: { id: report.article.id },
+        relations: { reports: true },
       });
+      article.reports.forEach(async (report: Report) => {
+        await this.reportRepository.update(report.id, {
+          status: ReportStatus.rejected,
+          resolvedOn: new Date(),
+        });
+      });
+
+      return {};
     }
 
     const article = await this.articleRepository.findOne({
       where: { id: report.article.id },
-      relations: { reviews: true, reports: true, user: true },
+      relations: {
+        reviews: true,
+        reports: true,
+        user: true,
+        notifications: true,
+      },
     });
 
-    article.reviews.forEach((review: Review) => {
-      this.reviewRepository.remove(review);
-    });
-
-    article.reports.forEach((report: Report) =>
-      this.reportRepository.remove(report),
-    );
-
-    const notificationData: createNotificationDTO = {
-      userID: article.user.id,
+    const notificationData = {
+      user: article.user,
+      corelatingArticleID: article.id,
       title: `Article "${article.title}" has been deleted`,
       message: `Your article "${article.title}" has beed removed by the admin, acording to the report of another platform user!`,
-      articleID: article.id,
       deleteArticleOnReception: true,
     };
 
-    this.articleRepository.remove(article);
+    article.reviews.forEach(async (review: Review) => {
+      await this.reviewRepository.remove(review);
+    });
+
+    article.reports.forEach(
+      async (report: Report) => await this.reportRepository.remove(report),
+    );
+
+    article.notifications.forEach(
+      async (notification: Notification) =>
+        await this.notificationRepository.remove(notification),
+    );
+
+    await this.articleRepository.remove(article);
 
     const notification = this.notificationRepository.create(notificationData);
+
     return this.notificationRepository.save(notification);
   }
 

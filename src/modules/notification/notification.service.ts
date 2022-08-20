@@ -28,6 +28,7 @@ export class NotificationService {
       message: data.message,
       article: article,
       deleteArticleOnReception: data.deleteArticleOnReception,
+      corelatingArticleID: article.id,
     };
     const notification = await this.notificationRepository.create(
       notificationData,
@@ -43,15 +44,7 @@ export class NotificationService {
     });
     if (!user.notifications || user.notifications.length == 0) return [];
     else {
-      const notificationsWithArticles: Notification[] = [];
-      for (let i = 0; i < user.notifications.length; i++) {
-        const notification = await this.notificationRepository.findOne({
-          where: { id: user.notifications[0].id },
-          relations: { article: true },
-        });
-        notificationsWithArticles.push(notification);
-      }
-      const data = notificationsWithArticles
+      const data = user.notifications
         .filter((notification: Notification) => {
           return !notification.opened;
         })
@@ -68,7 +61,7 @@ export class NotificationService {
             message: notification.message,
             sentOn: notification.sentOn,
             opened: notification.opened,
-            articleID: notification.article.id,
+            articleID: notification.corelatingArticleID,
             deleteArticleOnReception: notification.deleteArticleOnReception,
           };
         });
@@ -85,15 +78,7 @@ export class NotificationService {
     if (!user || !user.notifications || user.notifications.length == 0)
       return [];
     else {
-      const notificationsWithArticles: Notification[] = [];
-      for (let i = 0; i < user.notifications.length; i++) {
-        const notification = await this.notificationRepository.findOne({
-          where: { id: user.notifications[0].id },
-          relations: { article: true },
-        });
-        notificationsWithArticles.push(notification);
-      }
-      const data = notificationsWithArticles
+      const data = user.notifications
         .filter((notification: Notification) => {
           return !notification.opened && notification.sentOn > after;
         })
@@ -110,7 +95,7 @@ export class NotificationService {
             message: notification.message,
             sentOn: notification.sentOn,
             opened: notification.opened,
-            articleID: notification.article.id,
+            articleID: notification.corelatingArticleID,
             deleteArticleOnReception: notification.deleteArticleOnReception,
           };
         });

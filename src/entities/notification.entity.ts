@@ -33,7 +33,10 @@ export class Notification {
   public title!: string;
 
   @ManyToOne(() => Article, (article) => article.notifications)
-  public article!: Article;
+  public article: Article;
+
+  @Column({ type: 'integer', nullable: false })
+  public corelatingArticleID: number;
 
   @Column({ type: 'boolean', nullable: false })
   public deleteArticleOnReception!: boolean;
