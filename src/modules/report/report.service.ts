@@ -114,8 +114,4 @@ export class ReportService {
 
     return this.notificationRepository.save(notification);
   }
-
-  public getAll() {
-    return this.reportRepository.find();
-  }
 }

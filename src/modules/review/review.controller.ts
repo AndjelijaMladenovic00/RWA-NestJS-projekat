@@ -22,11 +22,6 @@ export class ReviewController {
     return data;
   }
 
-  /* @Get('all')
-  public getAll() {
-    return this.reviewService.getAll();
-  }*/
-
   @UseGuards(JwtAuthGuard)
   @Post('createReview')
   public createReview(@Body() reviewData: createReviewDTO) {

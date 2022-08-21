@@ -40,11 +40,6 @@ export class NotificationController {
     );
   }
 
-  @Get('all')
-  public getAll() {
-    return this.notificationService.getAll();
-  }
-
   @UseGuards(JwtAuthGuard)
   @Put('setNotificationToOpened/:id')
   public setNotificationToOpened(@Param('id', ParseIntPipe) id: number) {

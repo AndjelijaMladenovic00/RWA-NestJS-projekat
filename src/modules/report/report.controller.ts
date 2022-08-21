@@ -39,9 +39,4 @@ export class ReportController {
   ) {
     return this.reportService.updateReport(id, status);
   }
-
-  @Get('all')
-  public getAll() {
-    return this.reportService.getAll();
-  }
 }

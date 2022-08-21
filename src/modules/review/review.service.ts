@@ -24,7 +24,7 @@ export class ReviewService {
       relations: { reviews: true },
     });
     if (!article || !article.reviews || article.reviews.length == 0) return [];
-    let reviews = [];
+    const reviews = [];
     for (let i = 0; i < article.reviews.length; i++) {
       const review = await this.reviewRepository.findOne({
         where: { id: article.reviews[i].id },

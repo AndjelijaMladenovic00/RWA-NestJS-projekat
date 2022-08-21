@@ -1,4 +1,3 @@
-// eslint-disable-next-line prettier/prettier
 import { User } from './user.entity';
 import { Article } from './article.entity';
 import { ReportStatus } from '../enums/report-status.enum';

@@ -1,10 +1,4 @@
-import {
-  Column,
-  ColumnTypeUndefinedError,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Article } from './article.entity';
 import { User } from './user.entity';
 

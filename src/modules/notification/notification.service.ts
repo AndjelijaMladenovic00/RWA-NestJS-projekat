@@ -37,7 +37,6 @@ export class NotificationService {
   }
 
   public async getNonOpenedNotifications(userID: number) {
-    //for seting initial local state
     const user: User = await this.userRepository.findOne({
       where: { id: userID },
       relations: { notifications: true },
@@ -102,10 +101,6 @@ export class NotificationService {
 
       return data;
     }
-  }
-
-  public getAll() {
-    return this.notificationRepository.find();
   }
 
   public setNotificationToOpened(id: number) {

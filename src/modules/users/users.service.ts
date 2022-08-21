@@ -10,10 +10,6 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  public getAll() {
-    return this.userRepository.find();
-  }
-
   public getUser(username: string) {
     return this.userRepository.findOneBy({ username: username });
   }
