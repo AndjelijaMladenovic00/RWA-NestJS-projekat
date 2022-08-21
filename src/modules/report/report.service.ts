@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import e from 'express';
-import { createNotificationDTO } from 'src/dtos/createNotification.dto';
 import { Article } from 'src/entities/article.entity';
 import { Notification } from 'src/entities/notification.entity';
 import { Report } from 'src/entities/report.entity';
