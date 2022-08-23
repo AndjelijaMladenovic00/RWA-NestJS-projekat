@@ -9,6 +9,7 @@ import { User } from 'src/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { ReviewController } from './review.controller';
 import { ReviewService } from './review.service';
+import { Notification } from 'src/entities/notification.entity';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ReviewService } from './review.service';
     TypeOrmModule.forFeature([Article]),
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([Report]),
+    TypeOrmModule.forFeature([Notification]),
   ],
   controllers: [ReviewController],
   providers: [ReviewService, AuthService, JwtService, UsersService],

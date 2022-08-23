@@ -62,6 +62,7 @@ export class NotificationService {
             opened: notification.opened,
             articleID: notification.corelatingArticleID,
             deleteArticleOnReception: notification.deleteArticleOnReception,
+            senderID: notification.corelatingUserID,
           };
         });
 
@@ -96,6 +97,7 @@ export class NotificationService {
             opened: notification.opened,
             articleID: notification.corelatingArticleID,
             deleteArticleOnReception: notification.deleteArticleOnReception,
+            senderID: notification.corelatingUserID,
           };
         });
 

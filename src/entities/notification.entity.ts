@@ -29,9 +29,12 @@ export class Notification {
   @ManyToOne(() => Article, (article) => article.notifications)
   public article: Article;
 
-  @Column({ type: 'integer', nullable: false })
+  @Column({ type: 'integer', nullable: true })
   public corelatingArticleID: number;
 
-  @Column({ type: 'boolean', nullable: false })
-  public deleteArticleOnReception!: boolean;
+  @Column({ type: 'boolean', nullable: true })
+  public deleteArticleOnReception: boolean;
+
+  @Column({ type: 'integer', nullable: true })
+  public corelatingUserID: number;
 }

@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
 import { createUserDTO } from 'src/dtos/createUser.dto';
 import { Article } from 'src/entities/article.entity';
+import { Notification } from 'src/entities/notification.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Article) private articleRepository: Repository<Article>,
+    @InjectRepository(Notification)
+    private notificationRepository: Repository<Notification>,
   ) {}
 
   public getUser(username: string) {
@@ -113,7 +115,18 @@ export class UsersService {
     if (!user.subscriptions.includes(subscription))
       user.subscriptions.push(subscription);
 
-    this.userRepository.save(user);
+    const notificationData = {
+      user: subscription,
+      title: `New subscritpion by user ${user.username}`,
+      message: `User ${user.username} just subscribed to you! Check out ${user.username} profile!`,
+      corelatingUserID: user.id,
+    };
+
+    const notification: Notification =
+      this.notificationRepository.create(notificationData);
+    await this.notificationRepository.save(notification);
+
+    return this.userRepository.save(user);
   }
 
   public async unsubscribe(userID: number, unsubscribingFromID: number) {
@@ -133,6 +146,6 @@ export class UsersService {
     if (user.subscriptions.includes(subscription))
       user.subscriptions.splice(user.subscriptions.indexOf(subscription), 1);
 
-    this.userRepository.save(user);
+    return this.userRepository.save(user);
   }
 }

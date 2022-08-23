@@ -5,6 +5,7 @@ import { Article } from 'src/entities/article.entity';
 import { Review } from 'src/entities/review.entity';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
+import { Notification } from 'src/entities/notification.entity';
 
 @Injectable()
 export class ReviewService {
@@ -12,6 +13,8 @@ export class ReviewService {
     @InjectRepository(Review) private reviewRepository: Repository<Review>,
     @InjectRepository(Article) private articleRepository: Repository<Article>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Notification)
+    private notificationRepository: Repository<Notification>,
   ) {}
 
   public getAll() {
@@ -41,16 +44,16 @@ export class ReviewService {
     }
 
     return reviews;
-
-    return reviews;
   }
 
   public async createReview(reviewData: createReviewDTO) {
     const user: User = await this.userRepository.findOneBy({
       id: reviewData.userID,
     });
-    const article: Article = await this.articleRepository.findOneBy({
-      id: reviewData.articleID,
+
+    const article: Article = await this.articleRepository.findOne({
+      where: { id: reviewData.articleID },
+      relations: { user: true },
     });
 
     const reviews = await this.reviewRepository.findAndCountBy({
@@ -73,6 +76,20 @@ export class ReviewService {
       user: user,
       reviewedOn: new Date(),
     };
+
+    const notificationData = {
+      user: article.user,
+      corelatingArticleID: article.id,
+      title: `New review on your article "${article.title}"`,
+      message: `User ${user.username} has reviewed your article "${article.title}" and gave it a score of ${reviewData.score}! Check out the review!`,
+      article: article,
+      deleteArticleOnReception: false,
+      corelatingUserID: user.id,
+    };
+
+    const notification: Notification =
+      this.notificationRepository.create(notificationData);
+    await this.notificationRepository.save(notification);
 
     const newReview = this.reviewRepository.create(review);
     return await this.reviewRepository.save(newReview);
