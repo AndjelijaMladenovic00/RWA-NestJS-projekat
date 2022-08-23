@@ -36,10 +36,6 @@ export class ArticleService {
     return this.articleRepository.save(newArticle);
   }
 
-  public getAll() {
-    return this.articleRepository.find();
-  }
-
   public async getArticlesForId(id: number) {
     const user: User | null = await this.userRepository.findOneBy({ id: id });
     return this.articleRepository.findBy({ user: user });
