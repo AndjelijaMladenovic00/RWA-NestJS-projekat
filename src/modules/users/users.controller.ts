@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -44,5 +45,29 @@ export class UsersController {
   @Get('getProfileData/:id')
   public getProfileData(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getProfileData(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getSubscriptionsForUser/:id')
+  public getSubscriptionsForUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getSubscriptionsForUser(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('subscribe/:userID/:subscribingToID')
+  public subscribe(
+    @Param('userID', ParseIntPipe) userID: number,
+    @Param('subscribingToID', ParseIntPipe) subscribingToID: number,
+  ) {
+    return this.userService.subscribe(userID, subscribingToID);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('unsubscribe/:userID/:unsubscribingFromID')
+  public unsubscribe(
+    @Param('userID', ParseIntPipe) userID: number,
+    @Param('subscribingToID', ParseIntPipe) unsubscribingFromID: number,
+  ) {
+    return this.userService.unsubscribe(userID, unsubscribingFromID);
   }
 }

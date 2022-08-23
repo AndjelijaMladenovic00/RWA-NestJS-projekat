@@ -77,4 +77,62 @@ export class UsersService {
       averageArticleScore: averageScore,
     };
   }
+
+  public async getSubscriptionsForUser(id: number) {
+    const user: User = await this.userRepository.findOne({
+      where: { id: id },
+      relations: { subscriptions: true },
+    });
+
+    if (!user || !user.subscriptions) return [];
+    else
+      return user.subscriptions.map((user: User) => {
+        return {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          profileType: user.profileType,
+        };
+      });
+  }
+
+  public async subscribe(userID: number, subscribingToID: number) {
+    const user: User = await this.userRepository.findOne({
+      where: { id: userID },
+      relations: { subscriptions: true },
+    });
+
+    if (!user) return;
+
+    const subscription: User = await this.userRepository.findOneBy({
+      id: subscribingToID,
+    });
+
+    if (!subscription) return;
+
+    if (!user.subscriptions.includes(subscription))
+      user.subscriptions.push(subscription);
+
+    this.userRepository.save(user);
+  }
+
+  public async unsubscribe(userID: number, unsubscribingFromID: number) {
+    const user: User = await this.userRepository.findOne({
+      where: { id: userID },
+      relations: { subscriptions: true },
+    });
+
+    if (!user) return;
+
+    const subscription: User = await this.userRepository.findOneBy({
+      id: unsubscribingFromID,
+    });
+
+    if (!subscription) return;
+
+    if (user.subscriptions.includes(subscription))
+      user.subscriptions.splice(user.subscriptions.indexOf(subscription), 1);
+
+    this.userRepository.save(user);
+  }
 }

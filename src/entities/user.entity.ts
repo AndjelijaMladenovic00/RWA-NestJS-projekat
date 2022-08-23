@@ -3,7 +3,13 @@ import { Review } from './review.entity';
 import { Report } from './report.entity';
 import { Article } from './article.entity';
 import { Notification } from './notification.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -33,4 +39,7 @@ export class User {
 
   @OneToMany(() => Notification, (notification) => notification.user)
   public notifications: Notification[];
+
+  @ManyToMany(() => User)
+  public subscriptions: User[];
 }
