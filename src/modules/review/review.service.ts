@@ -39,6 +39,7 @@ export class ReviewService {
         comment: review.comment,
         username: review.user.username,
         reviewedOn: review.reviewedOn,
+        userID: review.user.id,
       };
       reviews.push(data);
     }

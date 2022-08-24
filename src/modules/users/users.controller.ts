@@ -66,7 +66,7 @@ export class UsersController {
   @Put('unsubscribe/:userID/:unsubscribingFromID')
   public unsubscribe(
     @Param('userID', ParseIntPipe) userID: number,
-    @Param('subscribingToID', ParseIntPipe) unsubscribingFromID: number,
+    @Param('unsubscribingFromID', ParseIntPipe) unsubscribingFromID: number,
   ) {
     return this.userService.unsubscribe(userID, unsubscribingFromID);
   }

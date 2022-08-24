@@ -126,7 +126,9 @@ export class UsersService {
       this.notificationRepository.create(notificationData);
     await this.notificationRepository.save(notification);
 
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+
+    return subscription;
   }
 
   public async unsubscribe(userID: number, unsubscribingFromID: number) {
@@ -143,9 +145,12 @@ export class UsersService {
 
     if (!subscription) return;
 
-    if (user.subscriptions.includes(subscription))
-      user.subscriptions.splice(user.subscriptions.indexOf(subscription), 1);
+    user.subscriptions = user.subscriptions.filter((subscription: User) => {
+      subscription.id != unsubscribingFromID;
+    });
 
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+
+    return subscription;
   }
 }

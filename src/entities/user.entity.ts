@@ -6,6 +6,7 @@ import { Notification } from './notification.entity';
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -41,5 +42,6 @@ export class User {
   public notifications: Notification[];
 
   @ManyToMany(() => User)
+  @JoinTable()
   public subscriptions: User[];
 }
