@@ -37,8 +37,26 @@ export class ArticleService {
   }
 
   public async getArticlesForId(id: number) {
-    const user: User | null = await this.userRepository.findOneBy({ id: id });
-    return this.articleRepository.findBy({ user: user });
+    const user: User | null = await this.userRepository.findOne({
+      where: { id: id },
+      relations: { articles: true },
+    });
+
+    const data = user.articles.map((article: Article) => {
+      return {
+        id: article.id,
+        userId: user.id,
+        username: user.username,
+        publishedOn: article.publishedOn,
+        lastEdited: article.lastEdited,
+        text: article.text,
+        title: article.title,
+        averageScore: article.averageScore,
+        genre: article.genre,
+      };
+    });
+
+    return data;
   }
 
   public async deleteArticle(id: number) {
