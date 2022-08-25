@@ -54,6 +54,12 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('getSubscribersForUser/:id')
+  public getSubscribersForUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getSubscribersForUser(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Put('subscribe/:userID/:subscribingToID')
   public subscribe(
     @Param('userID', ParseIntPipe) userID: number,
