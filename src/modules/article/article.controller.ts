@@ -55,4 +55,19 @@ export class ArticleController {
   public updateArticleScore(@Body() data: UpdateArticleScoreDTO) {
     return this.articleService.updateArticleScore(data);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getArticlesForSubscriptionFeed/:id')
+  public getArticlesForSubscriptionFeed(@Param('id', ParseIntPipe) id: number) {
+    return this.articleService.getArticlesForSubscriptionFeed(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('searchArticles/:name/:userID')
+  public searchArticles(
+    @Param('name') name: string,
+    @Param('userID', ParseIntPipe) userID: number,
+  ) {
+    return this.articleService.searchArticles(name, userID);
+  }
 }

@@ -76,4 +76,13 @@ export class UsersController {
   ) {
     return this.userService.unsubscribe(userID, unsubscribingFromID);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('searchUsers/:name/:userID')
+  public searchUsers(
+    @Param('name') name: string,
+    @Param('userID', ParseIntPipe) userID: number,
+  ) {
+    return this.userService.searchUsers(name, userID);
+  }
 }

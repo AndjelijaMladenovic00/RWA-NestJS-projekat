@@ -114,7 +114,53 @@ export class ArticleService {
     return articlesData;
   }
 
+  public async getArticlesForSubscriptionFeed(id: number) {
+    const user: User = await this.userRepository.findOne({
+      where: { id: id },
+      relations: { subscriptions: true },
+    });
+
+    const subscriptionsIDs: number[] = user.subscriptions.map(
+      (subscription: User) => subscription.id,
+    );
+
+    const data = (
+      await this.articleRepository.find({ relations: { user: true } })
+    )
+      .filter((article: Article) => {
+        return subscriptionsIDs.includes(article.user.id);
+      })
+      .map((article: Article) => {
+        return {
+          id: article.id,
+          userId: article.user.id,
+          username: article.user.username,
+          publishedOn: article.publishedOn,
+          lastEdited: article.lastEdited,
+          text: article.text,
+          title: article.title,
+          averageScore: article.averageScore,
+          genre: article.genre,
+        };
+      });
+
+    return data;
+  }
+
   public async updateArticleScore(data: UpdateArticleScoreDTO) {
     await this.articleRepository.update(data.id, { averageScore: data.score });
+  }
+
+  public async searchArticles(name: string, userID: number) {
+    const allArticles: Article[] = await this.articleRepository.find({
+      relations: { user: true },
+    });
+
+    const articles: Article[] = allArticles.filter(
+      (article: Article) =>
+        article.user.id != userID && article.title.toLowerCase().includes(name),
+    );
+
+    return articles;
   }
 }

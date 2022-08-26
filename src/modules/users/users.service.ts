@@ -166,4 +166,13 @@ export class UsersService {
 
     return subscription;
   }
+
+  public async searchUsers(name: string, userID: number) {
+    const users: User[] = (await this.userRepository.find()).filter(
+      (user: User) =>
+        user.id != userID && user.username.toLowerCase().includes(name),
+    );
+
+    return users;
+  }
 }
