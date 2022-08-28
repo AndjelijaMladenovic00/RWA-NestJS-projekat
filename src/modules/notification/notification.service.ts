@@ -29,6 +29,7 @@ export class NotificationService {
       article: article,
       deleteArticleOnReception: data.deleteArticleOnReception,
       corelatingArticleID: article.id,
+      corelatingUserID: data.corelatingUserID,
     };
     const notification = await this.notificationRepository.create(
       notificationData,

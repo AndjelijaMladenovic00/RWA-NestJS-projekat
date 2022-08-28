@@ -108,9 +108,9 @@ export class ReportService {
         await this.notificationRepository.remove(notification),
     );
 
-    await this.articleRepository.remove(article);
-
     const notification = this.notificationRepository.create(notificationData);
+
+    await this.articleRepository.remove(article);
 
     return this.notificationRepository.save(notification);
   }

@@ -79,6 +79,7 @@ export class ArticleService {
     article.id = data.id;
 
     await this.articleRepository.update(data.id, article);
+
     return article;
   }
 
@@ -129,6 +130,11 @@ export class ArticleService {
     )
       .filter((article: Article) => {
         return subscriptionsIDs.includes(article.user.id);
+      })
+      .sort((a: Article, b: Article) => {
+        if (a.publishedOn > b.publishedOn) return -1;
+        else if (a.publishedOn < b.publishedOn) return 1;
+        else return 0;
       })
       .map((article: Article) => {
         return {

@@ -100,12 +100,15 @@ export class UsersService {
 
   public async getSubscribersForUser(id: number) {
     const subscribers: User[] = (
-      await this.userRepository.find({ relations: { subscriptions: true } })
-    ).filter((subscription: User) => {
-      subscription.subscriptions.forEach((sub: User) => {
-        if (sub.id == id) return true;
+      await this.userRepository.find({
+        relations: { subscriptions: true },
+      })
+    ).filter((user: User) => {
+      let subscribed = false;
+      user.subscriptions.forEach((subscription: User) => {
+        if (subscription.id == id) subscribed = true;
       });
-      return false;
+      return subscribed;
     });
 
     return subscribers;
